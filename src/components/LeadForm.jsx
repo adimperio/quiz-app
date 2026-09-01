@@ -31,11 +31,8 @@ export default function LeadForm({ onSubmit, submitError }) {
         </div>
         
         <h1 className="form-title">Your Home Health Score Is Ready</h1>
-        <p className="form-subtitle">
-          See your score, your biggest home maintenance risks, and the areas you may want to address before they become expensive surprises.
-        </p>
         
-        <div className="bonus-box flex items-center gap-2 mb-6 mt-4">
+        <div className="bonus-box flex items-center gap-2 mb-4 mt-2">
           <Lock size={16} />
           <span>Plus, get your FREE 10-Point Home Health Checklist.</span>
         </div>
