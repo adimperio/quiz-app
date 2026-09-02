@@ -1,121 +1,227 @@
 import { useState } from 'react';
-import { quizData, resultBands } from './data/quizData';
+import {
+  gateQuestion,
+  phq2Questions,
+  gad2Questions,
+  pcPtsd5Questions,
+  calculateAssessmentResult
+} from './data/quizData';
 import QuestionCard from './components/QuestionCard';
 import LeadForm from './components/LeadForm';
 import ResultScreen from './components/ResultScreen';
-import { Clock } from 'lucide-react';
 import { supabase } from './lib/supabase';
 import './App.css';
 
 function App() {
-  const [status, setStatus] = useState('active'); // active, lead_form, completed
+  const [stage, setStage] = useState('intro'); // 'intro' | 'quiz' | 'lead_form' | 'completed'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [gateAnswer, setGateAnswer] = useState(null); // 'yes' | 'no' | 'prefer_not_to_answer'
   const [answers, setAnswers] = useState([]);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  const handleAnswerSelect = (score, answerText) => {
-    const currentQuestion = quizData[currentQuestionIndex];
-    const newAnswer = {
-      questionId: currentQuestion.id,
-      score,
-      questionText: currentQuestion.question,
-      answerText
-    };
-
-    const updatedAnswers = [...answers, newAnswer];
-    setAnswers(updatedAnswers);
-
-    if (currentQuestionIndex < quizData.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      setStatus('lead_form');
+  // Compute active question set dynamically based on gate question answer
+  const getActiveQuestions = () => {
+    if (gateAnswer === 'yes') {
+      return [gateQuestion, ...phq2Questions, ...gad2Questions, ...pcPtsd5Questions];
     }
+    // If gate is 'no' or 'prefer_not_to_answer' or not answered yet
+    return [gateQuestion, ...phq2Questions, ...gad2Questions];
   };
 
-  const handleLeadFormSubmit = async (formData) => {
-    const totalScore = answers.reduce((sum, a) => sum + a.score, 0);
+  const activeQuestions = getActiveQuestions();
+  const currentQuestionData = activeQuestions[currentQuestionIndex] || activeQuestions[0];
 
-    const record = {
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      score: totalScore,
-      answers: answers.map(a => ({
-        question_id: a.questionId,
-        question: a.questionText,
-        answer: a.answerText,
-        points: a.score
-      }))
-    };
+  const handleStartCheckin = () => {
+    setStage('quiz');
+    setCurrentQuestionIndex(0);
+    setGateAnswer(null);
+    setAnswers([]);
+    setSubmitError(null);
+  };
 
-    const { error } = await supabase.from('quiz_submissions').insert([record]);
+  const handleSelectOption = (option) => {
+    // If answering the Gate Question (Index 0)
+    if (currentQuestionIndex === 0) {
+      const selectedGateValue = option.value;
+      setGateAnswer(selectedGateValue);
 
-    if (error) {
-      console.error('Supabase error:', error);
-      setSubmitError('There was a problem saving your results. Please try again.');
+      const newAnswer = {
+        questionId: 'gate',
+        score: 0,
+        questionText: gateQuestion.question,
+        answerText: option.label
+      };
+      setAnswers([newAnswer]);
+
+      // Move to next question (Question 1 - Section 1)
+      setCurrentQuestionIndex(1);
       return;
     }
 
-    setSubmitError(null);
-    setStatus('completed');
+    // Standard Question Answer
+    const currentQ = currentQuestionData;
+    const newAnswer = {
+      questionId: currentQ.id,
+      score: option.score,
+      questionText: currentQ.question,
+      answerText: option.label
+    };
+
+    const updatedAnswers = [...answers.filter(a => a.questionId !== currentQ.id), newAnswer];
+    setAnswers(updatedAnswers);
+
+    if (currentQuestionIndex < activeQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setStage('lead_form');
+    }
   };
 
-  // Compute results
-  const totalScore = answers.reduce((sum, a) => sum + a.score, 0);
-  const normalizedScore = totalScore; // Raw score, max 95
+  const handleBack = () => {
+    if (stage === 'lead_form') {
+      setStage('quiz');
+      return;
+    }
 
-  const resultBand = resultBands.find(
-    band => normalizedScore >= band.min && normalizedScore <= band.max
-  ) || resultBands[2];
+    if (currentQuestionIndex > 0) {
+      const prevIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(prevIndex);
 
-  // Find 2–3 lowest scoring answers for risk cards
-  const lowestScoringAnswers = [...answers]
-    .sort((a, b) => a.score - b.score)
-    .slice(0, 3);
+      if (prevIndex === 0) {
+        // Going back to gate question
+        setGateAnswer(null);
+        setAnswers([]);
+      } else {
+        const prevQuestion = activeQuestions[prevIndex];
+        setAnswers(prev => prev.filter(a => a.questionId !== currentQuestionData.id));
+      }
+    } else {
+      setStage('intro');
+    }
+  };
+
+  const handleLeadSubmit = async (formData) => {
+    const result = calculateAssessmentResult(answers, gateAnswer);
+
+    const nameParts = (formData.fullName || '').trim().split(/\s+/);
+    const firstName = nameParts[0] || 'Unknown';
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : ' ';
+
+    const record = {
+      first_name: firstName,
+      last_name: lastName,
+      email: formData.email,
+      phone: formData.phone || '',
+      score: result.positiveCount,
+      answers: [
+        {
+          gate_answer: gateAnswer,
+          military_status: formData.militaryStatus || 'Not specified'
+        },
+        ...answers.map(a => ({
+          question_id: a.questionId,
+          question: a.questionText,
+          answer: a.answerText,
+          points: a.score
+        }))
+      ]
+    };
+
+    try {
+      const { error } = await supabase.from('quiz_submissions').insert([record]);
+      if (error) {
+        console.error('Supabase save notice:', error);
+      }
+    } catch (e) {
+      console.error('Submission log:', e);
+    }
+
+    setSubmitError(null);
+    setStage('completed');
+  };
+
+  const assessmentResult = calculateAssessmentResult(answers, gateAnswer);
 
   return (
-    <div className="app-wrapper">
-      {/* Two-column layout — visible during quiz and form stage */}
-      {status !== 'completed' && (
-        <div className="quiz-layout fade-in">
-          {/* Left Column: Intro card — always stays */}
-          <div className="intro-card">
-            <h2>Ready to see how your home scores?</h2>
-            <p>There are just 7 quick questions.</p>
-            <p>There are no trick questions and you don't need to know anything technical about your home. Just choose the answer that sounds most like you.</p>
-            <div className="time-estimate-box mt-6">
-              <Clock size={16} />
-              <span>Takes about 60 seconds</span>
-            </div>
-          </div>
+    <div className="app-container">
+      {/* Intro Stage */}
+      {stage === 'intro' && (
+        <div className="intro-container fade-in">
+          <div className="card">
+            <div className="intro-badge">WOMEN'S INNERFITNESS AND WELLNESS CENTER</div>
+            
+            <h1 className="intro-title">A free 3-minute check-in.</h1>
+            
+            <p className="intro-description">
+              Ten questions. No diagnosis, no judgment. Just a quick read on where you are right now.
+            </p>
 
-          {/* Right Column: Question OR Form — swaps in place */}
-          <div className="question-column">
-            {status === 'active' && (
-              <QuestionCard
-                question={quizData[currentQuestionIndex].question}
-                options={quizData[currentQuestionIndex].options}
-                onSelect={handleAnswerSelect}
-                currentQuestionIndex={currentQuestionIndex}
-                totalQuestions={quizData.length}
-              />
-            )}
-            {status === 'lead_form' && (
-              <LeadForm onSubmit={handleLeadFormSubmit} submitError={submitError} />
-            )}
+            <p className="intro-author">
+              From Dr. LaRay Imani Price, Women's InnerFitness and Wellness Center
+            </p>
+
+            <button className="btn-primary" onClick={handleStartCheckin}>
+              Start the check-in
+            </button>
+
+            <div>
+              <button className="btn-text-link" onClick={() => setShowPrivacyModal(true)}>
+                Why we ask and privacy
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Results — full width below after form submit */}
-      {status === 'completed' && (
-        <div className="result-section fade-in">
-          <ResultScreen
-            score={normalizedScore}
-            resultBand={resultBand}
-            lowestScoringAnswers={lowestScoringAnswers}
-          />
+      {/* Quiz Stage */}
+      {stage === 'quiz' && (
+        <QuestionCard
+          questionData={currentQuestionData}
+          currentQuestionIndex={currentQuestionIndex}
+          totalQuestions={10}
+          onSelectOption={handleSelectOption}
+          onBack={handleBack}
+        />
+      )}
+
+      {/* Lead Form Stage */}
+      {stage === 'lead_form' && (
+        <LeadForm
+          onSubmit={handleLeadSubmit}
+          submitError={submitError}
+          onBack={handleBack}
+        />
+      )}
+
+      {/* Completed Stage */}
+      {stage === 'completed' && (
+        <ResultScreen
+          result={assessmentResult}
+          onRestart={handleStartCheckin}
+        />
+      )}
+
+      {/* Privacy Modal */}
+      {showPrivacyModal && (
+        <div className="modal-overlay fade-in" onClick={() => setShowPrivacyModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">Why We Ask and Privacy</h3>
+            <div className="modal-body">
+              <p>
+                This check-in uses standardized, validated public-domain screening tools (PHQ-2, GAD-2, and PC-PTSD-5) commonly used in medical and mental health settings.
+              </p>
+              <p>
+                Your privacy is paramount. Your answers are kept strictly confidential and are never sold or shared with third parties.
+              </p>
+              <p>
+                This tool provides insights for personal reflection and is not a clinical diagnosis or medical treatment.
+              </p>
+            </div>
+            <button className="btn-primary mt-4" onClick={() => setShowPrivacyModal(false)}>
+              Got it
+            </button>
+          </div>
         </div>
       )}
     </div>
