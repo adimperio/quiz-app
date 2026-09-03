@@ -1,0 +1,77 @@
+.v1-theme {
+  .app-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .form-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .result-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .quiz-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .intro-card {
+    flex: 1;
+    background-color: var(--text-dark);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intro-card h2 {
+    color: white;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-card p {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .time-estimate-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: auto; /* Push to bottom */
+  }
+
+  .question-column {
+    flex: 1.2;
+  }
+
+  @media (max-width: 768px) {
+    .quiz-layout {
+      flex-direction: column;
+    }
+  }
+}
