@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <title>Quiz App</title>
     <script type="text/javascript">
-      // GitHub Pages SPA 404 Redirect
-      var path = window.location.pathname;
-      var repo = '/quiz-app';
-      var relativePath = path.startsWith(repo) ? path.slice(repo.length) : path;
-      if (relativePath === '' || relativePath === '/') {
-        relativePath = '/';
-      }
-      window.location.replace(repo + '/#' + relativePath + window.location.search + window.location.hash);
+      // Single Page Apps for GitHub Pages
+      // MIT License https://github.com/rafgraph/spa-github-pages
+      var pathSegmentsToKeep = 1;
+
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
     </script>
   </head>
   <body>
