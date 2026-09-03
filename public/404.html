@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quiz App</title>
+    <script type="text/javascript">
+      // GitHub Pages SPA 404 Redirect
+      var path = window.location.pathname;
+      var repo = '/quiz-app';
+      var relativePath = path.startsWith(repo) ? path.slice(repo.length) : path;
+      if (relativePath === '' || relativePath === '/') {
+        relativePath = '/';
+      }
+      window.location.replace(repo + '/#' + relativePath + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
