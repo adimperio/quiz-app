@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-:root {
+.v1-theme {
   /* Colors */
   --bg-color: #f7f5ef;
   --text-dark: #1a2b3c;
@@ -27,6 +27,43 @@
   /* Shadows */
   --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+
+  /* Base Headings */
+  h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  /* Global Utilities */
+  .text-center { text-align: center; }
+  .mt-2 { margin-top: 0.5rem; }
+  .mt-4 { margin-top: 1rem; }
+  .mt-6 { margin-top: 1.5rem; }
+  .mb-2 { margin-bottom: 0.5rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mb-6 { margin-bottom: 1.5rem; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .gap-2 { gap: 0.5rem; }
+  .gap-4 { gap: 1rem; }
+  .gap-6 { gap: 1.5rem; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .justify-between { justify-content: space-between; }
 }
 
 * {
@@ -35,52 +72,8 @@
   padding: 0;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-dark);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
-}
-
-#root {
-  width: 100%;
-  padding: 0 1.5rem;
-  box-sizing: border-box;
-}
-
-/* Base Headings */
-h1, h2, h3, h4, h5 {
-  font-weight: 700;
-  color: var(--text-dark);
-  line-height: 1.2;
-}
-
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-.fade-in {
-  animation: fadeIn 0.5s ease forwards;
-}
-
-/* Global Utilities */
-.text-center { text-align: center; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-6 { margin-top: 1.5rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }

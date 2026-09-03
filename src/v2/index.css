@@ -1,0 +1,91 @@
+.v2-theme {
+  /* Design Tokens from innerfit-pulse.lovable.app */
+  --bg-canvas: #eee9e0;
+  --card-bg: #fcfaf7;
+  --card-border: #e7e1d7;
+  
+  --text-navy: #1b2a47;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --accent-gold: #b48232;
+  
+  --primary-terracotta: #ac4837;
+  --primary-terracotta-hover: #943c2c;
+  --primary-terracotta-light: #fcf4f2;
+  
+  --option-bg: #ffffff;
+  --option-border: #dfd9ce;
+  --option-hover-bg: #f7f3ed;
+  
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --radius-card: 24px;
+  --radius-pill: 9999px;
+  
+  --shadow-card: 0 16px 40px rgba(27, 42, 71, 0.06), 0 2px 6px rgba(27, 42, 71, 0.03);
+
+  font-family: var(--font-sans);
+  background-color: var(--bg-canvas);
+  color: var(--text-body);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  -webkit-font-smoothing: antialiased;
+
+  .fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Typography Utilities */
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  /* Section Tag / Badge */
+  .section-badge {
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Generic Layout */
+  .text-center { text-align: center; }
+  .mt-2 { margin-top: 0.5rem; }
+  .mt-4 { margin-top: 1rem; }
+  .mt-6 { margin-top: 1.5rem; }
+  .mb-2 { margin-bottom: 0.5rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mb-6 { margin-bottom: 1.5rem; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .gap-2 { gap: 0.5rem; }
+  .gap-3 { gap: 0.75rem; }
+  .gap-4 { gap: 1rem; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .justify-between { justify-content: space-between; }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
