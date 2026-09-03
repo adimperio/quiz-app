@@ -1,117 +1,108 @@
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { CheckCircle, Lock } from 'lucide-react';
 import './LeadForm.css';
 
-export default function LeadForm({ onSubmit, submitError, onBack }) {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [militaryStatus, setMilitaryStatus] = useState('');
+export default function LeadForm({ onSubmit, submitError }) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await onSubmit({
-      fullName,
-      email,
-      phone,
-      militaryStatus
-    });
+    await onSubmit(formData);
     setIsSubmitting(false);
   };
 
   return (
-    <div className="lead-form-wrapper fade-in">
-      <div className="question-nav-bar">
-        {onBack && (
-          <button className="back-nav-btn" onClick={onBack}>
-            <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
-        )}
-      </div>
-
-      <div className="card lead-form-card">
-        <h2 className="form-title">Where should we send your results?</h2>
-
-        <form onSubmit={handleSubmit} className="lead-form-content">
+    <div className="lead-form-container fade-in">
+      <div className="lead-form-card">
+        <div className="flex items-center gap-2 form-status mb-4">
+          <CheckCircle size={18} className="status-icon" />
+          <span>ALL 7 QUESTIONS DONE</span>
+        </div>
+        
+        <h1 className="form-title">Your Home Health Score Is Ready</h1>
+        
+        <div className="bonus-box flex items-center gap-2 mb-4 mt-2">
+          <Lock size={16} />
+          <span>Plus, get your FREE 10-Point Home Health Checklist.</span>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="flex-col gap-4">
           <div className="form-group">
-            <label htmlFor="fullName" className="form-label">Full name</label>
+            <label htmlFor="firstName">First Name</label>
             <input
               type="text"
-              id="fullName"
+              id="firstName"
+              name="firstName"
               required
               className="form-input"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={formData.firstName}
+              onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              required
+              className="form-input"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
+              name="email"
               required
               className="form-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone" className="form-label">Phone (optional)</label>
+            <label htmlFor="phone">Phone</label>
             <input
               type="tel"
               id="phone"
+              name="phone"
+              required
               className="form-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={formData.phone}
+              onChange={handleChange}
             />
           </div>
 
-          <div className="form-group military-group">
-            <label className="form-label">
-              Are you or a family member currently or formerly military?
-            </label>
-            <div className="options-list">
-              {['Yes', 'No', 'Prefer not to say'].map((option) => {
-                const isSelected = militaryStatus === option;
-                return (
-                  <label
-                    key={option}
-                    className={`option-pill-btn ${isSelected ? 'selected' : ''}`}
-                  >
-                    <input
-                      type="radio"
-                      name="militaryStatus"
-                      value={option}
-                      checked={isSelected}
-                      onChange={(e) => setMilitaryStatus(e.target.value)}
-                      className="sr-only"
-                    />
-                    <span className="option-radio-circle">
-                      {isSelected && <div className="radio-inner-dot" />}
-                    </span>
-                    <span className="option-label">{option}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-
-          <p className="form-privacy-note">
-            We will send your results and a free Daily Healing Check-In journal. We will never share your information.
-          </p>
-
-          <button type="submit" className="btn-primary" disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'See my results'}
+          <button type="submit" className="submit-button mt-4" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : <>Show My Results <span style={{marginLeft: '8px'}}>→</span></>}
           </button>
 
           {submitError && (
-            <p className="form-error-msg">{submitError}</p>
+            <p style={{ color: 'var(--danger-color)', fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem' }}>
+              {submitError}
+            </p>
           )}
+          
+          <p className="disclaimer mt-4 text-center">
+            Your information is used to deliver your results and help you with your Home Health Check-Up.
+          </p>
         </form>
       </div>
     </div>

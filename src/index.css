@@ -1,29 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 :root {
-  /* Design Tokens from innerfit-pulse.lovable.app */
-  --bg-canvas: #eee9e0;
-  --card-bg: #fcfaf7;
-  --card-border: #e7e1d7;
+  /* Colors */
+  --bg-color: #f7f5ef;
+  --text-dark: #1a2b3c;
+  --text-muted: #5e6b7a;
   
-  --text-navy: #1b2a47;
-  --text-body: #334155;
-  --text-muted: #64748b;
-  --accent-gold: #b48232;
+  --primary-green: #5a9e3e;
+  --primary-green-hover: #4a8232;
   
-  --primary-terracotta: #ac4837;
-  --primary-terracotta-hover: #943c2c;
-  --primary-terracotta-light: #fcf4f2;
+  --light-green-bg: #e6f6e8;
+  --light-green-text: #2f7a26;
   
-  --option-bg: #ffffff;
-  --option-border: #dfd9ce;
-  --option-hover-bg: #f7f3ed;
+  --warning-orange: #f59e0b;
   
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --card-bg: #ffffff;
+  --risk-card-bg: #f2efe9;
   
-  --radius-card: 24px;
-  --radius-pill: 9999px;
+  --border-color: #e5e3db;
   
-  --shadow-card: 0 16px 40px rgba(27, 42, 71, 0.06), 0 2px 6px rgba(27, 42, 71, 0.03);
+  /* Status Colors for Result Bands */
+  --success-color: #5a9e3e; /* Green */
+  --warning-color: #eab308; /* Yellow/Orange for NEEDS ATTENTION */
+  --danger-color: #ef4444; /* Red for AT RISK */
+  
+  /* Shadows */
+  --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -33,54 +36,39 @@
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-canvas);
-  color: var(--text-body);
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
   -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
-  max-width: 580px;
-  margin: 0 auto;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Base Headings */
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.5s ease forwards;
 }
 
-/* Typography Utilities */
-.font-serif {
-  font-family: var(--font-serif);
-}
-
-.font-sans {
-  font-family: var(--font-sans);
-}
-
-/* Section Tag / Badge */
-.section-badge {
-  color: var(--accent-gold);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-
-/* Generic Layout */
+/* Global Utilities */
 .text-center { text-align: center; }
 .mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
@@ -91,8 +79,8 @@ body {
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
 .gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }

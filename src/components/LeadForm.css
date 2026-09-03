@@ -1,152 +1,100 @@
-.lead-form-wrapper {
+.lead-form-container {
   width: 100%;
-  max-width: 540px;
+  max-width: 480px;
   margin: 0 auto;
 }
 
 .lead-form-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  box-shadow: var(--shadow-sm);
   text-align: left;
 }
 
-.form-title {
-  font-family: var(--font-serif);
-  font-size: 1.85rem;
-  color: var(--text-navy);
-  line-height: 1.25;
-  margin-bottom: 2rem;
+.form-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.lead-form-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.status-icon {
+  color: var(--primary-green);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.bonus-box {
+  background: var(--light-green-bg);
+  color: var(--light-green-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 0.85rem;
 }
 
-.form-label {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-navy);
-  margin-bottom: 0.5rem;
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.4rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.9rem 1.15rem;
-  background: var(--option-bg);
-  border: 1px solid var(--option-border);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-sans);
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 20px; /* Pill shape */
+  font-family: inherit;
   font-size: 1rem;
-  color: var(--text-navy);
   outline: none;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+  transition: border-color 0.2s ease;
 }
 
 .form-input:focus {
-  border-color: var(--primary-terracotta);
-  box-shadow: 0 0 0 3px rgba(172, 72, 55, 0.12);
-  background: #ffffff;
+  border-color: var(--primary-green);
 }
 
-.military-group {
-  margin-top: 0.5rem;
-}
-
-.military-group .form-label {
-  margin-bottom: 0.85rem;
-}
-
-.options-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.option-pill-btn {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.submit-button {
   width: 100%;
-  padding: 1.15rem 1.25rem;
-  background: var(--option-bg);
-  border: 1px solid var(--option-border);
-  border-radius: var(--radius-pill);
-  color: var(--text-navy);
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  font-weight: 400;
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 30px; /* Pill shape */
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
-  text-align: left;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.option-radio-circle {
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+  align-items: center;
+  transition: background-color 0.2s ease;
 }
 
-.radio-inner-dot {
-  width: 10px;
-  height: 10px;
-  background-color: var(--text-navy);
-  border-radius: 50%;
-  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.submit-button:hover {
+  background: var(--primary-green-hover);
 }
 
-.option-pill-btn:hover:not(.selected) {
-  border-color: #cbd5e1;
-  background-color: var(--option-hover-bg);
-}
-
-.option-pill-btn.selected {
-  border-color: var(--text-navy);
-  background-color: rgba(27, 42, 71, 0.06);
-  color: var(--text-navy);
-  font-weight: 500;
-}
-
-.option-pill-btn.selected .option-radio-circle {
-  border-color: var(--text-navy);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-.form-error-msg {
-  color: #dc2626;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.form-privacy-note {
-  font-size: 0.85rem;
+.disclaimer {
+  font-size: 0.7rem;
   color: var(--text-muted);
-  line-height: 1.5;
-  text-align: left;
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
+  line-height: 1.4;
+  padding: 0 1rem;
 }
